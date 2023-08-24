@@ -1,0 +1,27 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+.vscode
+
+#1. Frontend
+# dependencies
+frontend/node_modules
+
+# next.js
+frontend/.next/
+frontend/out/
+
+# production
+frontend/build
+
+# misc
+frontend/.DS_Store
+frontend/*.pem
+
+# typescript
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+#2. backend
+#__pycache__
+backend/__pycache__
+backend/model/__pycache__
