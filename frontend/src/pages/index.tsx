@@ -39,8 +39,7 @@ export default function Home() {
       const result = await removeBook(book.id);
       if (result === -1)
         return;
-      const data: Book = result;
-      const newBookList = bookList.filter(item => item.id !== data.id)
+      const newBookList = bookList.filter(item => item.id !== book.id)
       setBookList(newBookList);
     }
   }

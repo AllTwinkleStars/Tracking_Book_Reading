@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "8000:8000"
+    command: uvicorn main:app --reload
+    restart: unless-stopped
+  frontend: 
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    command: npm run dev
+    restart: unless-stopped

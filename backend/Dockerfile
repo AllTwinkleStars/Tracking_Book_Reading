@@ -13,5 +13,3 @@ RUN pip install --no-cache-dir --upgrade -r /backend/requirements.txt
 # 
 COPY ./ /backend/
 
-# 
-CMD ["uvicorn", "main:app", "--reload"]

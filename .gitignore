@@ -22,6 +22,5 @@ frontend/*.tsbuildinfo
 frontend/next-env.d.ts
 
 #2. backend
-#__pycache__
-backend/__pycache__
-backend/model/__pycache__
+__pycache__
+.pytest_cache
