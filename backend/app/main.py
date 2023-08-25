@@ -1,10 +1,10 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_sqlalchemy import DBSessionMiddleware
 from dotenv import load_dotenv
 from dataclasses import dataclass
 from pydantic import BaseModel
-from typing import Optional, List, Sequence, Any
+from typing import Optional, List, Sequence
 from app.model.bookModel import BookRepository
 
 load_dotenv()
@@ -85,12 +85,29 @@ async def updateBook(id: int, bookItem: Book):
     repo.execute_raw_sql(sql, params)
     book = convert_to_json(repo.fetch_raw_sql(
         "select * from books where id = :id", {'id': id}))
+    if not book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No User with this id: {id} found",
+        )
     return book[0]
 
 
 @app.delete("/api/removeBook/{id}", tags=["books"], status_code=status.HTTP_200_OK)
 async def removeBook(id: int):
+    book = convert_to_json(repo.fetch_raw_sql(
+        "select * from books where id = :id", {'id': id}))
+    if not book:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No User with this id: {id} found",
+        )
     sql = "DELETE FROM books WHERE id = :id"
     params = {"id": id}
     result = repo.execute_raw_sql(sql, params)
-    return result
+    if result == -1:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"No User with this id: {id} found",
+        )
+    return {"Status": "Success"}

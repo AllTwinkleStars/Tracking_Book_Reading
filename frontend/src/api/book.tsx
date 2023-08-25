@@ -4,13 +4,12 @@ import { Book } from '../context/book-types';
 
 export const getAllBooks = async () => {
   try {
-    const { data } = await Axios.get('api/getAllBooks');
+    const { data, status } = await Axios.get('api/getAllBooks');
+    showErrorToast(status);
     return data;
   } catch (error: any) {
     if (error.response) {
-      toast.error(`${error.response.data.message}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      showErrorToast(error.response.status);
     } else if (error.request) {
       toast.error("Server No Response", {
         position: toast.POSITION.TOP_RIGHT,
@@ -22,13 +21,12 @@ export const getAllBooks = async () => {
 
 export const addBook = async (book: Book) => {
   try {
-    const { data } = await Axios.post('api/addBook', book);
+    const { data, status } = await Axios.post('api/addBook', book);
+    showErrorToast(status);
     return data;
   } catch (error: any) {
     if (error.response) {
-      toast.error(`${error.response.data.message}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      showErrorToast(error.response.status);
     } else if (error.request) {
       toast.error("Server No Response", {
         position: toast.POSITION.TOP_RIGHT,
@@ -40,13 +38,12 @@ export const addBook = async (book: Book) => {
 
 export const updateBook = async (book: Book) => {
   try {
-    const { data } = await Axios.put(`api/updateBook/${book.id}`, book);
+    const { data, status } = await Axios.put(`api/updateBook/${book.id}`, book);
+    showErrorToast(status);
     return data;
   } catch (error: any) {
     if (error.response) {
-      toast.error(`${error.response.data.message}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      showErrorToast(error.response.status);
     } else if (error.request) {
       toast.error("Server No Response", {
         position: toast.POSITION.TOP_RIGHT,
@@ -58,13 +55,12 @@ export const updateBook = async (book: Book) => {
 
 export const removeBook = async (id: number) => {
   try {
-    const { data } = await Axios.delete(`api/removeBook/${id}`);
+    const { data, status } = await Axios.delete(`api/removeBook/${id}`);
+    showErrorToast(status);
     return data;
   } catch (error: any) {
     if (error.response) {
-      toast.error(`${error.response.data.message}`, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      showErrorToast(error.response.status);
     } else if (error.request) {
       toast.error("Server No Response", {
         position: toast.POSITION.TOP_RIGHT,
@@ -73,3 +69,35 @@ export const removeBook = async (id: number) => {
   }
   return -1;
 };
+
+const showErrorToast = (status_code: number) => {
+  switch (status_code) {
+    case 200:
+    case 201:
+    case 202:
+      toast.success("Action Success", {
+        position: toast.POSITION.TOP_RIGHT,
+      })
+      break;
+    case 401:
+      toast.success(`${status_code} Error: Unauthenticated`, {
+        position: toast.POSITION.TOP_RIGHT,
+      })
+      break;
+    case 403:
+      toast.error(`${status_code} Error: Unauthorized`, {
+        position: toast.POSITION.TOP_RIGHT,
+      })
+      break;
+    case 404:
+      toast.error(`${status_code} Error: NOT FOUND`, {
+        position: toast.POSITION.TOP_RIGHT,
+      })
+      break;
+    case 409:
+      toast.error(`${status_code} Error: OUT OF DATE`, {
+        position: toast.POSITION.TOP_RIGHT,
+      })
+      break;
+  }
+}
